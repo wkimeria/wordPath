@@ -1,0 +1,10 @@
+Testsuite: com.wordPath.PuzzleControllerTests
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 1.536 sec
+------------- Standard Output ---------------
+--Output from testGenerate--
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+--Output from testGenerate--
+------------- ---------------- ---------------
+
+Testcase: testGenerate took 1.506 sec

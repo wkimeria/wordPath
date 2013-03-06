@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="wkimeria-lt-17" name="com.wordPath.PuzzleControllerTests" tests="1" time="1.536" timestamp="2013-03-06T02:40:48">
+  <properties />
+  <testcase classname="com.wordPath.PuzzleControllerTests" name="testGenerate" time="1.506" />
+  <system-out><![CDATA[--Output from testGenerate--
+]]></system-out>
+  <system-err><![CDATA[--Output from testGenerate--
+]]></system-err>
+</testsuite>
