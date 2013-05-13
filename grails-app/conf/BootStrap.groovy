@@ -1,4 +1,4 @@
-import com.wordpath.utilities.Node
+import com.wordPath.utilities.Node
 class BootStrap {
 
     def init = { servletContext ->

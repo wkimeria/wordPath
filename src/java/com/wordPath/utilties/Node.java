@@ -1,4 +1,4 @@
-package com.wordpath.utilities;
+package com.wordPath.utilities;
 
 import java.util.ArrayList;
 import java.util.Deque;
