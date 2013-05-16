@@ -1,11 +1,9 @@
 import com.wordPath.utilities.Node
+import com.wordpath.Puzzle
 class BootStrap {
 
     def init = { servletContext ->
-		
-		//For now, just a test of generating 4x3 word puzzles
-		//TODO:Select database, create Puzzle Domain Objects and populate database. The code below should run
-		//     as a background process
+
 		int wordLength = 4;
 		int puzzleLength = 3
 		List<String> allowedWords = new ArrayList<>();
@@ -14,16 +12,25 @@ class BootStrap {
 		Double randomWordIndex = Math.random() * allowedWords.size();
 		//String randomWord = allowedWords.get(randomWordIndex.intValue());
 		
+		println new Date()
+		
 		for(String s:allowedWords){
 			String randomWord = s;
-			Node node = new Node(null, randomWord, allowedWords, 0, puzzleLength);
-			println("--------------- Node built for ${s} ---------------------");
-			List<List<String>> paths = node.getAllPaths();
+			Node node = new Node(null, randomWord, allowedWords, 0, puzzleLength)			
+			List<List<String>> paths = node.getAllPaths()			
 			for (List<String> path : paths) {
-				println(path);
-			}
-			System.out.println("Possible Paths = ${paths.size()}");
+				//println "Saving ${path}"
+				String start = path.first()
+				String last = path.last()				
+				def record = new Puzzle(startWord:start, 'path':path, endWord:last, frequency:0, wordLength:path.size())				
+				record.save(flush:true)			
+							
+			}			
 		}
+		def hotels = Puzzle.list()
+		println "Records in database = ${hotels.size()}"
+		println new Date()
+		println "Possible Paths = ${paths.size()}"
     }
     def destroy = {
     }
