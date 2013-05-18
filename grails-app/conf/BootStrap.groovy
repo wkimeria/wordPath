@@ -19,16 +19,12 @@ class BootStrap {
 			String randomWord = s;
 			Node node = new Node(null, randomWord, allowedWords, 0, puzzleLength)			
 			List<List<String>> paths = node.getAllPaths()
-			
-			for (List<String> path : paths) {				
-				String start = path.first()
-				String last = path.last()				
-				def record = new Puzzle(startWord:start, 'path':path, endWord:last, frequency:paths.size(), wordLength:path.size())				
-				record.save(flush:true)		
-				recordCount++
-				println "records = ${recordCount} path = ${path}"
-							
-			}			
+			String start = paths.get(0).first()
+			String last = paths.get(0).last()
+			def record = new Puzzle(startWord:start, 'paths':paths, endWord:last, pathCount:paths.size(), wordLength: wordLength, isActive: false)
+			record.save(flush:true)
+			recordCount++
+			println "records = ${recordCount} path = ${start} -> ${last} number of paths = ${paths.size()}"			
 		}
 		def hotels = Puzzle.list()
 		println "Records in database = ${hotels.size()}"
