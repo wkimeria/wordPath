@@ -1,9 +1,11 @@
 import com.wordpath.Puzzle
 import com.wordPath.puzzle.generator.Generator
+import org.codehaus.groovy.grails.web.json.JSONObject
+import org.codehaus.groovy.grails.web.json.JSONArray
 class BootStrap {
 
     def init = { servletContext ->
-
+			
 		int wordLength = 5
 		int puzzleLength = 5
 		List<String> allowedWords = new ArrayList<>()
@@ -14,7 +16,7 @@ class BootStrap {
 			
 			println "saving for ${startWord} --> ${endWord} ${pathInfo}"
 			def record = new Puzzle(startWord:startWord,
-				paths:pathInfo,
+				paths:new JSONArray(pathInfo.toString()).toString(),
 				endWord:endWord,
 				possiblePaths:possiblePaths,
 				wordLength:pathInfo.get(0).size(),
@@ -24,6 +26,7 @@ class BootStrap {
 			println record
 			recordCount++
 			println "recordcount = ${recordCount}"
+			
 			
 		}		
 		Generator generator = new Generator(allowedWords,wordLength,puzzleLength)

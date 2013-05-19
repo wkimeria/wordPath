@@ -3,7 +3,7 @@ package com.wordpath
 class Puzzle {
 	
 	String startWord
-	List<List<String>> paths
+	String paths
 	String endWord
 	Integer possiblePaths
 	Integer wordLength
