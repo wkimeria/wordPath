@@ -11,16 +11,20 @@ class BootStrap {
 		def recordCount = 0;
 		
 		def saveToDatabase = {startWord, pathInfo, endWord, possiblePaths, isActive ->
+			
+			println "saving for ${startWord} --> ${endWord} ${pathInfo}"
 			def record = new Puzzle(startWord:startWord,
 				paths:pathInfo,
 				endWord:endWord,
 				possiblePaths:possiblePaths,
 				wordLength:pathInfo.get(0).size(),
 				isActive: false)
-				record.save(flush:true)
+				record.save(flush:true, failOnError:true)			
+			
 			println record
 			recordCount++
 			println "recordcount = ${recordCount}"
+			
 		}		
 		Generator generator = new Generator(allowedWords,wordLength,puzzleLength)
 		generator.generate(saveToDatabase)

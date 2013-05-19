@@ -19,36 +19,35 @@ class Generator {
 	 * @return
 	 */
 	def generate(def persistFunc){
-		println "Words = ${allowedWords.size()}"
-		Double randomWordIndex = Math.random() * allowedWords.size()
-		Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
-		
-		println "Started at ${new Date()}"
+		println "Words that match criteria = ${allowedWords.size()} in size"
+		println "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
 		int recordCount = 0
-		for(String s:allowedWords){
-			String randomWord = s
+		for(String randomWord:allowedWords){
+			Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
 			Node node = new Node(null, randomWord, allowedWords, 0, depth)
 			List<List<String>> paths = node.getAllPaths()
-			
-			for (List<String> path : paths) {
-				String start = path.first()
-				String last = path.last()
-				String index = start + " - " + last + " - " + path.size()
-				if(consolidatedPaths.containsKey(index)){
-					List<List<String>> existingPaths = consolidatedPaths.get(index)
-					existingPaths.add(path)
-					consolidatedPaths.put(index,existingPaths)
-				}else{
-					consolidatedPaths.put(index,[path])
+			if(containsPuzzles(paths)){
+				for (List<String> path : paths) {
+					String start = path.first()
+					String last = path.last()
+					String index = start + " - " + last + " - " + path.size()
+					if(consolidatedPaths.containsKey(index)){
+						List<List<String>> existingPaths = consolidatedPaths.get(index)
+						existingPaths.add(path)
+						consolidatedPaths.put(index,existingPaths)
+					}else{
+						consolidatedPaths.put(index,[path])
+					}
 				}
-			}
-			for(List<List<String>> pathInfo:consolidatedPaths.values()){
-				String startWord = pathInfo.get(0).first()
-				String endWord = pathInfo.get(0).last()
-				Integer possiblePaths = pathInfo.size()
 				
-				persistFunc(startWord, pathInfo, endWord, possiblePaths, false)				
-			}			
+				def pathsFound = consolidatedPaths.values()				
+				for(List<List<String>> pathInfo:pathsFound){
+					String startWord = pathInfo.get(0).first()
+					String endWord = pathInfo.get(0).last()
+					Integer possiblePaths = pathInfo.size()
+					persistFunc(startWord, pathInfo, endWord, possiblePaths, false)
+				}
+			}	
 		}
 	}
 	
@@ -66,5 +65,26 @@ class Generator {
 			}
 		}
 		return allowedWordsOfLengh
+	}
+	
+	public static int MIN_PATH_SIZE = 3
+	
+	/**
+	 * Determine whether the paths generated are of valid lengths
+	 * @param allPaths
+	 * @return
+	 */
+	def containsPuzzles(allPaths){
+		boolean containsPuzzles = false
+		int minPathSize = MIN_PATH_SIZE
+		for(List<String>path:allPaths){
+			if(path.size() > minPathSize){
+				minPathSize = path.size()
+			}
+		}
+		if(minPathSize > MIN_PATH_SIZE){
+			containsPuzzles = true
+		}
+		return containsPuzzles
 	}
 }
