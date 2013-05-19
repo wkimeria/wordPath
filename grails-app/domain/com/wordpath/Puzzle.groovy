@@ -3,18 +3,23 @@ package com.wordpath
 class Puzzle {
 	
 	String startWord
-	List<String> path
+	List<List<String>> paths
 	String endWord
-	Integer frequency
+	Integer possiblePaths
 	Integer wordLength
 	boolean isActive 
 
     static constraints = {
 		startWord blank: false
-		path nullable: false
+		paths nullable: false
 		endWord blank: false
-		frequency nullable: false
+		possiblePaths nullable: false
 		wordLength nullable: false
 		isActive nullable: false
     }
+	
+	String toString(){
+		String recordInfo = "${startWord} ${endWord} possible paths = ${possiblePaths} ${paths}"
+		return recordInfo		
+	}
 }
