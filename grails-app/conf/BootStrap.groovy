@@ -4,7 +4,7 @@ class BootStrap {
 
     def init = { servletContext ->
 
-		int wordLength = 4;
+		int wordLength = 5;
 		int puzzleLength = 5
 		List<String> allowedWords = new ArrayList<>();
 		getWordsOfLength(wordLength, allowedWords);
@@ -13,18 +13,20 @@ class BootStrap {
 		//String randomWord = allowedWords.get(randomWordIndex.intValue());
 		
 		println "Started at ${new Date()}"
-		int recordCount = 0
-		
+		int recordCount = 0		
 		for(String s:allowedWords){
 			String randomWord = s;
 			Node node = new Node(null, randomWord, allowedWords, 0, puzzleLength)			
 			List<List<String>> paths = node.getAllPaths()
-			String start = paths.get(0).first()
-			String last = paths.get(0).last()
-			def record = new Puzzle(startWord:start, 'paths':paths, endWord:last, pathCount:paths.size(), wordLength: wordLength, isActive: false)
-			record.save(flush:true)
-			recordCount++
-			println "records = ${recordCount} path = ${start} -> ${last} number of paths = ${paths.size()}"			
+			
+			for (List<String> path : paths) {
+				String start = path.first()
+				String last = path.last()				
+				def record = new Puzzle(startWord:start, 'path':path, endWord:last, frequency:0, wordLength:path.size(), isActive: false)
+				record.save(flush:true)
+				recordCount++
+				println "records = ${recordCount} path = ${path}"					
+			}			
 		}
 		def hotels = Puzzle.list()
 		println "Records in database = ${hotels.size()}"
