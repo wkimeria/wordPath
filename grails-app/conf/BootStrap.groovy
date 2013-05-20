@@ -1,4 +1,5 @@
 import com.wordpath.Puzzle
+import com.wordpath.Path
 import com.wordPath.puzzle.generator.Generator
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -16,12 +17,24 @@ class BootStrap {
 			
 			println "saving for ${startWord} --> ${endWord} ${pathInfo}"
 			def record = new Puzzle(startWord:startWord,
-				paths:new JSONArray(pathInfo.toString()).toString(),
+				paths:[],
 				endWord:endWord,
 				possiblePaths:possiblePaths,
 				wordLength:pathInfo.get(0).size(),
 				isActive: false)
-				record.save(flush:true, failOnError:true)			
+				record.save(flush:false, failOnError:true)	
+				
+				//Save paths for record
+				pathInfo.each{ path ->
+					println path.toString()
+					Path p = new Path(puzzle:record, path:path.toString())
+					println "adding path ${p}"
+					record.paths.add(p)
+				}
+				record.save(flush:true, failOnError:true)
+				
+				
+						
 			
 			println record
 			recordCount++
