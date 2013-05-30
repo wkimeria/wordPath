@@ -1,10 +1,11 @@
 package com.wordPath.puzzle.generator
 import com.wordPath.utilities.Node
 import com.wordpath.Puzzle
+import com.wordpath.Path
 import java.io.IOException;
 import java.util.List;
 
-class Generator {
+class Generator{
 	int wordLength
 	int depth	
 	List<String> allowedWords
@@ -18,7 +19,7 @@ class Generator {
 	 * Generate puzzles
 	 * @return
 	 */
-	def generate(def persistFunc){
+	void generate(){
 		println "Words that match criteria = ${allowedWords.size()} in size"
 		println "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
 		int recordCount = 0
@@ -45,10 +46,54 @@ class Generator {
 					String startWord = pathInfo.get(0).first()
 					String endWord = pathInfo.get(0).last()
 					Integer possiblePaths = pathInfo.size()
-					persistFunc(startWord, pathInfo, endWord, possiblePaths, false)
+					saveToDatabase(startWord, pathInfo, endWord, possiblePaths, false)					
 				}
 			}	
 		}
+	}
+	
+	/**
+	 * Save specific row to database
+	 * @param startWord
+	 * @param pathInfo
+	 * @param endWord
+	 * @param possiblePaths
+	 * @param isActive
+	 * @return
+	 */
+	protected def saveToDatabase(startWord, pathInfo, endWord, possiblePaths, isActive){
+		def existingPuzzle =  Puzzle.find { startWord == startWord && endWord == endWord && wordLength == pathInfo.get(0).size() }
+		
+		if(existingPuzzle){
+			println "record exists ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+			return	
+		}
+		
+		//def existingPuzzle = Puzzle.find(startWord:startWord,endWord:endWord,wordLength:pathInfo.get(0).size())
+		println "saving for ${startWord} --> ${endWord} ${pathInfo}"
+		def record = new Puzzle(startWord:startWord,
+			paths:[],
+			endWord:endWord,
+			possiblePaths:possiblePaths,
+			wordLength:pathInfo.get(0).size(),
+			isActive: false)
+			record.save(flush:false, failOnError:true)
+						
+			//Save paths for record
+			pathInfo.each{ path ->
+				println path.toString()
+				Path p = new Path(puzzle:record, path:path.toString())
+				println "adding path ${p}"
+				record.paths.add(p)
+			}
+			record.save(flush:true, failOnError:true)
+			println "Records in database = ${Puzzle.list().size()}"
+			
+					
+		
+		println record
+		//recordCount++
+		//println "recordcount = ${recordCount}"
 	}
 	
 	/**
