@@ -63,5 +63,7 @@ grails.project.dependency.resolution = {
 		compile ":executor:0.3"
 		
 		compile ":quartz:1.0-RC8"
+		
+		compile ":grails-melody:1.44"
     }
 }
