@@ -8,7 +8,7 @@ import com.wordPath.puzzle.generator.Generator
 class GeneratePuzzlesJob {
 	def executorService
   static triggers = {
-    simple name: 'mySimpleTrigger', startDelay: 20000 
+    simple name: 'mySimpleTrigger', startDelay: 10000 
   }
   
   static final long RUNTIME = 1000 * 60 * 60 * 24 //1 day

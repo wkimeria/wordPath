@@ -30,7 +30,7 @@
 					
 						<g:sortableColumn property="possiblePaths" title="${message(code: 'puzzle.possiblePaths.label', default: 'Possible Paths')}" />
 					
-						<g:sortableColumn property="wordLength" title="${message(code: 'puzzle.wordLength.label', default: 'Word Length')}" />
+						<g:sortableColumn property="depth" title="${message(code: 'puzzle.depth.label', default: 'Depth')}" />
 					
 						<g:sortableColumn property="isActive" title="${message(code: 'puzzle.isActive.label', default: 'Is Active')}" />
 					
@@ -46,7 +46,7 @@
 					
 						<td>${fieldValue(bean: puzzleInstance, field: "possiblePaths")}</td>
 					
-						<td>${fieldValue(bean: puzzleInstance, field: "wordLength")}</td>
+						<td>${fieldValue(bean: puzzleInstance, field: "depth")}</td>
 					
 						<td><g:formatBoolean boolean="${puzzleInstance.isActive}" /></td>
 					

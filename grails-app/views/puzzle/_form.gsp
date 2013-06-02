@@ -43,12 +43,12 @@
 	<g:field name="possiblePaths" type="number" value="${puzzleInstance.possiblePaths}" required=""/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: puzzleInstance, field: 'wordLength', 'error')} required">
-	<label for="wordLength">
-		<g:message code="puzzle.wordLength.label" default="Word Length" />
+<div class="fieldcontain ${hasErrors(bean: puzzleInstance, field: 'depth', 'error')} required">
+	<label for="depth">
+		<g:message code="puzzle.depth.label" default="Depth" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:field name="wordLength" type="number" value="${puzzleInstance.wordLength}" required=""/>
+	<g:field name="depth" type="number" value="${puzzleInstance.depth}" required=""/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: puzzleInstance, field: 'isActive', 'error')} ">

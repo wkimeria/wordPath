@@ -24,14 +24,14 @@ class Generator{
 	void generate(long runTimeMillis){
 		long startTimeMillis = System.currentTimeMillis()		
 		log.info "Words that match criteria = ${allowedWords.size()} in size"
-		log.info "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
+		log.info "Started at ${new Date()} generating words of length ${depth} and depth ${depth}"
 		int recordCount = 0
 		while(System.currentTimeMillis() < (startTimeMillis + runTimeMillis)){
 			while(unProcessedWords.size() > 0){
 				int wordIdx = Math.random() * unProcessedWords.size()
 				String randomWord = unProcessedWords.get(wordIdx)
 				unProcessedWords.remove(wordIdx)
-			//for(String randomWord:allowedWords){				
+				log.info "Generating puzzle of depth = ${depth} and startWord = ${randomWord}"
 				Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
 				Node node = new Node(null, randomWord, allowedWords, 0, depth)
 				List<List<String>> paths = node.getAllPaths()
@@ -76,32 +76,44 @@ class Generator{
 		
 		log.debug "about to save ${startWord} ${endWord} ${pathInfo.get(0).size()}"
 		
-		def existingPuzzle =  Puzzle.find { startWord == startWord && endWord == endWord && wordLength == pathInfo.get(0).size() }		
-		
+		def existingPuzzle =  Puzzle.find { startWord == startWord && endWord == endWord && depth == pathInfo.get(0).size() }		
+				
 		if(existingPuzzle){
 			log.debug "record exists ${startWord} ${endWord} ${pathInfo.get(0).size()}"
 			return	
 		}
 		
-		//def existingPuzzle = Puzzle.find(startWord:startWord,endWord:endWord,wordLength:pathInfo.get(0).size())
-		//log.debug "saving for ${startWord} --> ${endWord} ${pathInfo}"
-		def record = new Puzzle(startWord:startWord,
-			paths:[],
-			endWord:endWord,
-			possiblePaths:possiblePaths,
-			wordLength:pathInfo.get(0).size(),
-			isActive: false)
-		record.save(flush:false, failOnError:true)
-					
-		//Save paths for record
+		def saveToDatabase = false
+		//Make sure there is at least on path of required length
 		pathInfo.each{ path ->
-			Path p = new Path(puzzle:record, path:path.toString())
-			record.paths.add(p)
+			if(path.size() == depth){
+				saveToDatabase = true
+			}
 		}
-		log.info "saving ${startWord} ${endWord} ${pathInfo.get(0).size()}"
-		log.debug "saving ${startWord} ${endWord} ${pathInfo.get(0).size()} ${pathInfo}"
-		record.save(flush:true, failOnError:true)
-		log.debug "Records in database = ${Puzzle.list().size()}"			
+		
+		if(saveToDatabase == true){
+			//def existingPuzzle = Puzzle.find(startWord:startWord,endWord:endWord,depth:pathInfo.get(0).size())
+			//log.debug "saving for ${startWord} --> ${endWord} ${pathInfo}"
+			def record = new Puzzle(startWord:startWord,
+				paths:[],
+				endWord:endWord,
+				possiblePaths:possiblePaths,
+				depth:depth,
+				isActive: false)
+			record.save(flush:false, failOnError:true)
+						
+			//Save paths for record
+			pathInfo.each{ path ->
+				if(path.size()== depth){
+					Path p = new Path(puzzle:record, path:path.toString())
+					record.paths.add(p)
+				}				
+			}
+			log.info "saving ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+			log.debug "saving ${startWord} ${endWord} ${pathInfo.get(0).size()} ${pathInfo}"
+			record.save(flush:true, failOnError:true)
+			log.debug "Records in database = ${Puzzle.list().size()}"
+		}
 	}
 	
 	/**

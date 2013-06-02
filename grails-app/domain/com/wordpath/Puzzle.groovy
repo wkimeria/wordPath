@@ -7,7 +7,7 @@ class Puzzle {
 	List<Path> paths
 	String endWord
 	Integer possiblePaths
-	Integer wordLength
+	Integer depth
 	boolean isActive 
 	
 	static hasMany = [paths: Path]
@@ -18,9 +18,9 @@ class Puzzle {
 		paths nullable: true
 		endWord blank: false
 		possiblePaths nullable: false
-		wordLength nullable: false
+		depth nullable: false
 		isActive nullable: false
-		startWord(unique: ['endWord','wordLength'])
+		startWord(unique: ['endWord','depth'])
     }
 	
 	String toString(){

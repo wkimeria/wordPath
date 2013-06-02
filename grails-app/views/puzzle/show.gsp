@@ -61,11 +61,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${puzzleInstance?.wordLength}">
+				<g:if test="${puzzleInstance?.depth}">
 				<li class="fieldcontain">
-					<span id="wordLength-label" class="property-label"><g:message code="puzzle.wordLength.label" default="Word Length" /></span>
+					<span id="depth-label" class="property-label"><g:message code="puzzle.depth.label" default="Depth" /></span>
 					
-						<span class="property-value" aria-labelledby="wordLength-label"><g:fieldValue bean="${puzzleInstance}" field="wordLength"/></span>
+						<span class="property-value" aria-labelledby="depth-label"><g:fieldValue bean="${puzzleInstance}" field="depth"/></span>
 					
 				</li>
 				</g:if>
