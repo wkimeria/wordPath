@@ -14,7 +14,7 @@ class Generator{
 		this.wordLength = wordLength
 		this.depth = depth
 		this.allowedWords = getWordsOfLength(wordLength, allowedWords)
-		this.unProcessedWords = new ArrayList<>(allowedWords)			
+		this.unProcessedWords = new ArrayList<>(this.allowedWords)			
 	}
 	
 	/**
@@ -31,7 +31,7 @@ class Generator{
 				int wordIdx = Math.random() * unProcessedWords.size()
 				String randomWord = unProcessedWords.get(wordIdx)
 				unProcessedWords.remove(wordIdx)
-				log.info "Generating puzzle of depth = ${depth} and startWord = ${randomWord}"
+				log.info "Generating puzzle of wordLength = ${wordLength} depth = ${depth} and startWord = ${randomWord}"
 				Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
 				Node node = new Node(null, randomWord, allowedWords, 0, depth)
 				List<List<String>> paths = node.getAllPaths()
