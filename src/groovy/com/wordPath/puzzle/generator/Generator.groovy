@@ -19,37 +19,42 @@ class Generator{
 	 * Generate puzzles
 	 * @return
 	 */
-	void generate(){
-		println "Words that match criteria = ${allowedWords.size()} in size"
-		println "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
+	void generate(long runTimeMillis){
+		long startTimeMillis = System.currentTimeMillis()		
+		log.info "Words that match criteria = ${allowedWords.size()} in size"
+		log.info "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
 		int recordCount = 0
-		for(String randomWord:allowedWords){
-			Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
-			Node node = new Node(null, randomWord, allowedWords, 0, depth)
-			List<List<String>> paths = node.getAllPaths()
-			if(containsPuzzles(paths)){
-				for (List<String> path : paths) {
-					String start = path.first()
-					String last = path.last()
-					String index = start + " - " + last + " - " + path.size()
-					if(consolidatedPaths.containsKey(index)){
-						List<List<String>> existingPaths = consolidatedPaths.get(index)
-						existingPaths.add(path)
-						consolidatedPaths.put(index,existingPaths)
-					}else{
-						consolidatedPaths.put(index,[path])
+		while(System.currentTimeMillis() < (startTimeMillis + runTimeMillis)){
+			for(String randomWord:allowedWords){				
+				Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
+				Node node = new Node(null, randomWord, allowedWords, 0, depth)
+				List<List<String>> paths = node.getAllPaths()
+				if(containsPuzzles(paths)){
+					for (List<String> path : paths) {
+						String start = path.first()
+						String last = path.last()
+						String index = start + " - " + last + " - " + path.size()
+						if(consolidatedPaths.containsKey(index)){
+							List<List<String>> existingPaths = consolidatedPaths.get(index)
+							existingPaths.add(path)
+							consolidatedPaths.put(index,existingPaths)
+						}else{
+							consolidatedPaths.put(index,[path])
+						}
 					}
-				}
-				
-				def pathsFound = consolidatedPaths.values()				
-				for(List<List<String>> pathInfo:pathsFound){
-					String startWord = pathInfo.get(0).first()
-					String endWord = pathInfo.get(0).last()
-					Integer possiblePaths = pathInfo.size()
-					saveToDatabase(startWord, pathInfo, endWord, possiblePaths, false)					
-				}
-			}	
+										
+					def pathsFound = consolidatedPaths.values()
+					for(List<List<String>> pathInfo:pathsFound){
+						String startWord = pathInfo.get(0).first()
+						String endWord = pathInfo.get(0).last()
+						Integer possiblePaths = pathInfo.size()
+						
+						saveToDatabase(startWord, pathInfo, endWord, possiblePaths, false)
+					}
+				}					
+			}
 		}
+		log.info "DONE PROCESSING!!!"
 	}
 	
 	/**
@@ -62,38 +67,34 @@ class Generator{
 	 * @return
 	 */
 	protected def saveToDatabase(startWord, pathInfo, endWord, possiblePaths, isActive){
-		def existingPuzzle =  Puzzle.find { startWord == startWord && endWord == endWord && wordLength == pathInfo.get(0).size() }
+		
+		log.debug "about to save ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+		
+		def existingPuzzle =  Puzzle.find { startWord == startWord && endWord == endWord && wordLength == pathInfo.get(0).size() }		
 		
 		if(existingPuzzle){
-			println "record exists ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+			log.debug "record exists ${startWord} ${endWord} ${pathInfo.get(0).size()}"
 			return	
 		}
 		
 		//def existingPuzzle = Puzzle.find(startWord:startWord,endWord:endWord,wordLength:pathInfo.get(0).size())
-		println "saving for ${startWord} --> ${endWord} ${pathInfo}"
+		log.debug "saving for ${startWord} --> ${endWord} ${pathInfo}"
 		def record = new Puzzle(startWord:startWord,
 			paths:[],
 			endWord:endWord,
 			possiblePaths:possiblePaths,
 			wordLength:pathInfo.get(0).size(),
 			isActive: false)
-			record.save(flush:false, failOnError:true)
-						
-			//Save paths for record
-			pathInfo.each{ path ->
-				println path.toString()
-				Path p = new Path(puzzle:record, path:path.toString())
-				println "adding path ${p}"
-				record.paths.add(p)
-			}
-			record.save(flush:true, failOnError:true)
-			println "Records in database = ${Puzzle.list().size()}"
-			
+		record.save(flush:false, failOnError:true)
 					
-		
-		println record
-		//recordCount++
-		//println "recordcount = ${recordCount}"
+		//Save paths for record
+		pathInfo.each{ path ->
+			Path p = new Path(puzzle:record, path:path.toString())
+			record.paths.add(p)
+		}
+		log.info "saving ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+		record.save(flush:true, failOnError:true)
+		log.info "Records in database = ${Puzzle.list().size()}"			
 	}
 	
 	/**

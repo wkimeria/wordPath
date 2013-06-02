@@ -10,23 +10,25 @@ class GeneratePuzzlesJob {
   static triggers = {
     simple name: 'mySimpleTrigger', startDelay: 20000 
   }
+  
+  static final long RUNTIME = 1000 * 60 * 60 * 24 //1 day
   def group = "MyGroup"
   def execute(){
     List<String> allowedWords = getWords()
-		
+	
 	def future1 = executorService.submit({	
 		Generator generator = new Generator(allowedWords,3,5)
-		generator.generate()
+		generator.generate(RUNTIME)
 	} as Callable)
 	
 	def future2 = executorService.submit({
 		Generator generator = new Generator(allowedWords,4,5)
-		generator.generate()
+		generator.generate(RUNTIME)
 	} as Callable)
 	
 	def future3 = executorService.submit({
 		Generator generator = new Generator(allowedWords,5,5)
-		generator.generate()
+		generator.generate(RUNTIME)
 	} as Callable)
 	
 	List<Future>futures = new ArrayList<Future>()
@@ -35,7 +37,7 @@ class GeneratePuzzlesJob {
 	futures.add(future3)
 	
 	futures.each{ future ->
-		future.get(60, TimeUnit.MINUTES)	
+		future.get(1, TimeUnit.DAYS)	
 	}
 			
 	def hotels = Puzzle.list()
