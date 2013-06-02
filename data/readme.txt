@@ -1,1 +1,1 @@
-List of words come from http://www.freescrabbledictionary.com/english.txt
+List of words come from http://dreamsteep.com/projects/the-english-open-word-list.html
