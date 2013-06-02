@@ -9,10 +9,12 @@ class Generator{
 	int wordLength
 	int depth	
 	List<String> allowedWords
+	List<String> unProcessedWords
 	Generator(List<String> allowedWords, int wordLength, int depth){
 		this.wordLength = wordLength
 		this.depth = depth
-		this.allowedWords = getWordsOfLength(wordLength, allowedWords)		
+		this.allowedWords = getWordsOfLength(wordLength, allowedWords)
+		this.unProcessedWords = new ArrayList<>(allowedWords)			
 	}
 	
 	/**
@@ -25,7 +27,11 @@ class Generator{
 		log.info "Started at ${new Date()} generating words of length ${wordLength} and depth ${depth}"
 		int recordCount = 0
 		while(System.currentTimeMillis() < (startTimeMillis + runTimeMillis)){
-			for(String randomWord:allowedWords){				
+			while(unProcessedWords.size() > 0){
+				int wordIdx = Math.random() * unProcessedWords.size()
+				String randomWord = unProcessedWords.get(wordIdx)
+				unProcessedWords.remove(wordIdx)
+			//for(String randomWord:allowedWords){				
 				Map<String, List<List<String>>> consolidatedPaths = new HashMap<>()
 				Node node = new Node(null, randomWord, allowedWords, 0, depth)
 				List<List<String>> paths = node.getAllPaths()
@@ -78,7 +84,7 @@ class Generator{
 		}
 		
 		//def existingPuzzle = Puzzle.find(startWord:startWord,endWord:endWord,wordLength:pathInfo.get(0).size())
-		log.debug "saving for ${startWord} --> ${endWord} ${pathInfo}"
+		//log.debug "saving for ${startWord} --> ${endWord} ${pathInfo}"
 		def record = new Puzzle(startWord:startWord,
 			paths:[],
 			endWord:endWord,
@@ -93,8 +99,9 @@ class Generator{
 			record.paths.add(p)
 		}
 		log.info "saving ${startWord} ${endWord} ${pathInfo.get(0).size()}"
+		log.debug "saving ${startWord} ${endWord} ${pathInfo.get(0).size()} ${pathInfo}"
 		record.save(flush:true, failOnError:true)
-		log.info "Records in database = ${Puzzle.list().size()}"			
+		log.debug "Records in database = ${Puzzle.list().size()}"			
 	}
 	
 	/**

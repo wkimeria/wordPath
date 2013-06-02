@@ -17,17 +17,17 @@ class GeneratePuzzlesJob {
     List<String> allowedWords = getWords()
 	
 	def future1 = executorService.submit({	
-		Generator generator = new Generator(allowedWords,3,5)
-		generator.generate(RUNTIME)
-	} as Callable)
-	
-	def future2 = executorService.submit({
 		Generator generator = new Generator(allowedWords,4,5)
 		generator.generate(RUNTIME)
 	} as Callable)
 	
-	def future3 = executorService.submit({
+	def future2 = executorService.submit({
 		Generator generator = new Generator(allowedWords,5,5)
+		generator.generate(RUNTIME)
+	} as Callable)
+	
+	def future3 = executorService.submit({
+		Generator generator = new Generator(allowedWords,6,5)
 		generator.generate(RUNTIME)
 	} as Callable)
 	
