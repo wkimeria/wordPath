@@ -11,4 +11,7 @@ class Path {
 		String recordInfo = "${path}"
 		return recordInfo
 	}
+	int size(){
+		return path.split(",").size()
+	}
 }

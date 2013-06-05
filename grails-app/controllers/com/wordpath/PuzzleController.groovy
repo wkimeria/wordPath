@@ -2,9 +2,20 @@ package com.wordpath
 
 import org.springframework.dao.DataIntegrityViolationException
 
+
 class PuzzleController {
+	
+	def puzzleService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	def getPuzzle(){
+		def randomPuzzle = puzzleService.getRandomPuzzle()
+		println "Puzzle returned is ${randomPuzzle}"
+		
+		println "${randomPuzzle}"
+		[puzzle: randomPuzzle]
+	}
 
     def index() {
         redirect(action: "list", params: params)
