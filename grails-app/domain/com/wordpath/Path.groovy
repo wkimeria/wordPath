@@ -14,4 +14,8 @@ class Path {
 	int size(){
 		return path.split(",").size()
 	}
+	
+	List<String> getPathElements(){
+		return Arrays.asList(path.split(","))
+	}
 }

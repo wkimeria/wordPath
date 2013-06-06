@@ -10,11 +10,33 @@ class PuzzleController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
 	def getPuzzle(){
-		def randomPuzzle = puzzleService.getRandomPuzzle()
-		println "Puzzle returned is ${randomPuzzle}"
-		
-		println "${randomPuzzle}"
+		def randomPuzzle = puzzleService.getRandomPuzzle()			
+		log.info " randomPuzzle = ${randomPuzzle}"		
 		[puzzle: randomPuzzle]
+	}
+	
+	def submitPuzzleSolution(){
+		//Get parameters
+		java.util.Enumeration theFields=request.getParameterNames()
+		def params =[:]
+		theFields.each { parameter ->
+			def fieldName = parameter
+			def value = request.getParameter(fieldName)
+			println "${fieldName} = ${value}"
+			params.put(fieldName, value)
+		}
+		println params
+		
+		List<String> solution = new LinkedList<String>()
+		solution.add(params.get("start_word"))
+		for(int i = 2 ; i< params.size() ; i++){
+			String key = "word_${i}"
+			if(params.containsKey(key)){
+				solution.add(params.get(key))
+			}					
+		}
+		solution.add(params.get("end_word"))		
+		println solution
 	}
 
     def index() {

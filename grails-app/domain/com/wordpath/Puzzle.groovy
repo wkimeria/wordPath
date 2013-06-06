@@ -23,6 +23,13 @@ class Puzzle {
 		startWord(unique: ['endWord','depth'])
     }
 	
+	def getRandomPath(){
+		def paths = this.paths
+		int randIdx = Math.random() * paths.size()
+		def randomPath = paths.get(randIdx)
+		return randomPath
+	}
+	
 	String toString(){
 		String recordInfo = "{$id} ${startWord} ${endWord} possible paths = ${possiblePaths} ${paths}"
 		return recordInfo		
