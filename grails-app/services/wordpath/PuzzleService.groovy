@@ -18,19 +18,21 @@ class PuzzleService {
 			StringBuilder currentWord = new StringBuilder(word)
 			currentWord.setCharAt(charToRemove, '_'.toCharacter())
 			currentWord.setCharAt(charToRemove2, '_'.toCharacter())
-			randomizedPath.add(currentWord)			
+			
+			randomizedPath.add(currentWord.toString().toUpperCase().toCharArray())			
 			
 		}
-		randomizedPath.set(0, randomPuzzle.startWord)
-		randomizedPath.set(randomizedPath.size() - 1, randomPuzzle.endWord)
-		return randomizedPath
+		randomizedPath.set(0, randomPuzzle.startWord.toUpperCase().toCharArray())
+		randomizedPath.set(randomizedPath.size() - 1, randomPuzzle.endWord.toUpperCase().toCharArray())
+		//return randomizedPath
+		return ["originalPuzzle" : randomPath, "randomizedPuzzle" : randomizedPath]
     }
 	
 	def getPuzzle(String startWord, String endWord, int depth){
 		def puzzle =  Puzzle.find { startWord == startWord && endWord == endWord && depth ==depth }
-		
-		
 		return puzzle
+		
+		
 	}
 	
 	def isPuzzleSolved(List<String> puzzle){

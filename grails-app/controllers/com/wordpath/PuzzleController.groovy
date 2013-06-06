@@ -11,8 +11,8 @@ class PuzzleController {
 	
 	def getPuzzle(){
 		def randomPuzzle = puzzleService.getRandomPuzzle()			
-		log.info " randomPuzzle = ${randomPuzzle}"		
-		[puzzle: randomPuzzle]
+		println " randomPuzzle = ${randomPuzzle}"		
+		[puzzle: randomPuzzle.randomizedPuzzle]
 	}
 	
 	def submitPuzzleSolution(){
