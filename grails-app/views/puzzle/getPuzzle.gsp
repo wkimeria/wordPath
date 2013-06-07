@@ -20,9 +20,12 @@
 			<g:set var="firstWord" value="${puzzle?.get(0)}" />
 			<g:set var="endWord" value="${puzzle?.get(puzzle.size()-1)}" />
 			
+			<input type = "hidden" name = "wordLength" value = "${puzzle.get(0).size()}"/>
+			<input type = "hidden" name = "puzzleDepth" value = "${puzzle.size()}"/>
+			
 			<g:set var="startWord" value="${puzzle.get(0)}" />						
 			<g:each in="${(0..startWord.size()-1).toList()}" var="count2" >
-				<input type="text" name="startWord_${count2}" placeholder="${startWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>					
+				<input type="text" name="word_0_${count2}" placeholder="${startWord[count2]}" value="${startWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>					
 			</g:each>
 			<br/>			
 			
@@ -31,10 +34,10 @@
 				<g:each in="${(1..currentWord.size()-1).toList()}" var="count2" >
 					<g:set var="currentLetter" value = "${currentWord[count2]}" />
 					<g:if test="${currentLetter == '_'}">
-						<input type="text" name="word_${count}_${count2}" maxlength="1" size="1" style="font-size: 30px;" required="true"/>
+						<input type="text" name="word_${count}_${count2-1}" maxlength="1" size="1" style="font-size: 30px;" required="true"/>
 					</g:if>
 					<g:if test="${currentLetter != '_'}">
-						<input type="text" name="word_${count}_${count2}" maxlength="1" size="1" style="font-size: 30px;" value="${currentLetter}" required="true"/>
+						<input type="text" name="word_${count}_${count2-1}" maxlength="1" size="1" style="font-size: 30px;" value="${currentLetter}" required="true"/>
 					</g:if>
 											
 				</g:each>
@@ -43,7 +46,7 @@
 			
 			<g:set var="endWord" value="${puzzle.get(puzzle.size()-1)}" />					
 			<g:each in="${(0..endWord.size()-1).toList()}" var="count2" >
-				<input type="text" name="endWord_${count2}" placeholder="${endWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>						
+				<input type="text" name="word_${puzzle.size()-1}_${count2}" placeholder="${endWord[count2]}" value = "${endWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>						
 			</g:each>
 			<br/>
 			<br/>		

@@ -25,8 +25,30 @@ class PuzzleController {
 			println "${fieldName} = ${value}"
 			params.put(fieldName, value)
 		}
-		println params
 		
+		def wordLength = Integer.parseInt(request.getParameter("wordLength"))
+		def puzzleDepth = Integer.parseInt(request.getParameter("puzzleDepth"))
+		
+		println "wordLength = ${wordLength} puzzleDepth = ${puzzleDepth}"
+				
+		List<String> solution = new LinkedList<String>()
+		for(int i = 0 ; i < puzzleDepth ; i++){
+			def currentWord = []
+			for(int x = 0; x < wordLength ; x++){
+				String key = "word_${i}_${x}"				
+				String currentLetter = request.getParameter(key)
+				println key
+				println currentLetter
+				currentWord.add(currentLetter)				
+			}
+			//println currentWord
+			solution.add(currentWord.join("").toLowerCase())
+			
+		}
+		println solution
+		
+		
+		/*
 		List<String> solution = new LinkedList<String>()
 		solution.add(params.get("start_word"))
 		for(int i = 2 ; i< params.size() ; i++){
@@ -37,6 +59,7 @@ class PuzzleController {
 		}
 		solution.add(params.get("end_word"))		
 		println solution
+		*/
 	}
 
     def index() {
