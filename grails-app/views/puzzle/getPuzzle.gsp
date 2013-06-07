@@ -10,9 +10,9 @@
 		<div id="description">
 		<p>The goal of this game is to get from the start word to the end word only changing one letter in the preceding word at each step.</p>
 		<br/>
-		<p>1 to 2 letters have been replaced with a _ in each subsequent word in the sequence. Replace the _with the correct letter while</p>
+		<p>1 to 2 letters have been replaced with a space in each subsequent word in the sequence. Replace the space with the correct letter while</p>
 		<br/>
-		<p>making sure that only one letter gets changed at each step. If you can complete the puzzle by changing more than the _ by all means do so.</p>		
+		<p>making sure that only one letter gets changed at each step. If you can complete the puzzle by changing more than the spaces by all means do so.</p>		
 		</div>
 		<br/>
 		<div align="center">
@@ -25,7 +25,7 @@
 			
 			<g:set var="startWord" value="${puzzle.get(0)}" />						
 			<g:each in="${(0..startWord.size()-1).toList()}" var="count2" >
-				<input type="text" name="word_0_${count2}" placeholder="${startWord[count2]}" value="${startWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>					
+				<input type="text" name="word_0_${count2}" placeholder="${startWord[count2]}" value="${startWord[count2]}" maxlength="1" size="1" style="font-size: 30px;" readonly/>					
 			</g:each>
 			<br/>			
 			
@@ -46,7 +46,7 @@
 			
 			<g:set var="endWord" value="${puzzle.get(puzzle.size()-1)}" />					
 			<g:each in="${(0..endWord.size()-1).toList()}" var="count2" >
-				<input type="text" name="word_${puzzle.size()-1}_${count2}" placeholder="${endWord[count2]}" value = "${endWord[count2]}" maxlength="1" size="1" style="font-size: 30px;"/>						
+				<input type="text" name="word_${puzzle.size()-1}_${count2}" placeholder="${endWord[count2]}" value = "${endWord[count2]}" maxlength="1" size="1" style="font-size: 30px;" readonly/>						
 			</g:each>
 			<br/>
 			<br/>		

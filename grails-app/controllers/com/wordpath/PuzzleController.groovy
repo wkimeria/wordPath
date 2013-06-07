@@ -15,51 +15,18 @@ class PuzzleController {
 		[puzzle: randomPuzzle.randomizedPuzzle]
 	}
 	
+	
+	
 	def submitPuzzleSolution(){
-		//Get parameters
-		java.util.Enumeration theFields=request.getParameterNames()
-		def params =[:]
-		theFields.each { parameter ->
-			def fieldName = parameter
-			def value = request.getParameter(fieldName)
-			println "${fieldName} = ${value}"
-			params.put(fieldName, value)
+		def isCorrect = puzzleService.validateSolution(request)
+		def status
+		def message
+		if(isCorrect){
+			status = 'CORRECT'
+		}else{
+			status = 'INCORRECT'
 		}
-		
-		def wordLength = Integer.parseInt(request.getParameter("wordLength"))
-		def puzzleDepth = Integer.parseInt(request.getParameter("puzzleDepth"))
-		
-		println "wordLength = ${wordLength} puzzleDepth = ${puzzleDepth}"
-				
-		List<String> solution = new LinkedList<String>()
-		for(int i = 0 ; i < puzzleDepth ; i++){
-			def currentWord = []
-			for(int x = 0; x < wordLength ; x++){
-				String key = "word_${i}_${x}"				
-				String currentLetter = request.getParameter(key)
-				println key
-				println currentLetter
-				currentWord.add(currentLetter)				
-			}
-			//println currentWord
-			solution.add(currentWord.join("").toLowerCase())
-			
-		}
-		println solution
-		
-		
-		/*
-		List<String> solution = new LinkedList<String>()
-		solution.add(params.get("start_word"))
-		for(int i = 2 ; i< params.size() ; i++){
-			String key = "word_${i}"
-			if(params.containsKey(key)){
-				solution.add(params.get(key))
-			}					
-		}
-		solution.add(params.get("end_word"))		
-		println solution
-		*/
+		render(view: "puzzleResult", model: [status: status])
 	}
 
     def index() {

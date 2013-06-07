@@ -35,7 +35,42 @@ class PuzzleService {
 		
 	}
 	
-	def isPuzzleSolved(List<String> puzzle){
+	def validateSolution(request){	
+		boolean isValid = false	
+		java.util.Enumeration theFields=request.getParameterNames()
+		def params =[:]
+		theFields.each { parameter ->
+			def fieldName = parameter
+			def value = request.getParameter(fieldName)
+			println "${fieldName} = ${value}"
+			params.put(fieldName, value)
+		}
 		
+		def wordLength = Integer.parseInt(request.getParameter("wordLength"))
+		def puzzleDepth = Integer.parseInt(request.getParameter("puzzleDepth"))
+						
+		List<String> solution = new LinkedList<String>()
+		for(int i = 0 ; i < puzzleDepth ; i++){
+			def currentWord = []
+			for(int x = 0; x < wordLength ; x++){
+				String key = "word_${i}_${x}"
+				String currentLetter = request.getParameter(key)
+				println key
+				println currentLetter
+				currentWord.add(currentLetter)
+			}			
+			solution.add(currentWord.join("").toLowerCase())
+		}
+		//return solution
+		def puzzle = Puzzle.find { startWord == solution.first() && endWord == solution.last() && depth == puzzleDepth}	
+		println "solution = ${solution}"
+		
+		if(puzzle){
+			puzzle.paths.each{ path ->
+				println path.getPathElements()
+				if(path.toString() == solution.toString()){isValid = true}
+			}
+		}		
+		return isValid
 	}
 }
