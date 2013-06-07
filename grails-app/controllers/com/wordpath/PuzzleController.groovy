@@ -13,9 +13,7 @@ class PuzzleController {
 		def randomPuzzle = puzzleService.getRandomPuzzle()			
 		println " randomPuzzle = ${randomPuzzle}"		
 		[puzzle: randomPuzzle.randomizedPuzzle]
-	}
-	
-	
+	}	
 	
 	def submitPuzzleSolution(){
 		def isCorrect = puzzleService.validateSolution(request)
